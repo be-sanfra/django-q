@@ -56,6 +56,13 @@ class Queue(multiprocessing.queues.Queue):
 
         self.size = SharedCounter(0)
 
+    def __getstate__(self):
+        return super(Queue, self).__getstate__() + (self.size, )
+
+    def __setstate__(self, state):
+        super(Queue, self).__setstate__(state[:-1])
+        self.size = state[-1]
+
     def put(self, *args, **kwargs):
         super(Queue, self).put(*args, **kwargs)
         self.size.increment(1)
