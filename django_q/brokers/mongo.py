@@ -20,6 +20,10 @@ class Mongo(Broker):
         super(Mongo, self).__init__(list_key)
         self.collection = self.get_collection()
 
+    def __setstate__(self, state):
+        super(Mongo, self).__setstate__(state)
+        self.collection = self.get_collection()
+
     @staticmethod
     def get_connection(list_key=Conf.PREFIX):
         return MongoClient(**Conf.MONGO)
