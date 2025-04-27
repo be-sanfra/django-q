@@ -56,4 +56,4 @@ build-backend = "poetry.masonry.api"
 
 [tool.poetry.extras]
 rollbar = ["django-q-rollbar"]
-sentry = ["django-q-sentry "]
+sentry = ["django-q-sentry"]
