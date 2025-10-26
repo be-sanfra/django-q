@@ -4,7 +4,15 @@ import zlib
 
 from django.core.signing import BadSignature, SignatureExpired, b64_decode, JSONSerializer, \
     Signer as Sgnr, TimestampSigner as TsS, dumps
-from django.utils import baseconv
+
+try:
+    from django.core.signing import b62_decode
+except ImportError:
+    # fallback for django 3.x
+    from django.utils.baseconv import base62
+
+    b62_decode = base62.decode
+
 from django.utils.crypto import constant_time_compare
 from django.utils.encoding import force_bytes, force_str
 
@@ -63,7 +71,7 @@ class TimestampSigner(Signer, TsS):
         """
         result = super(TimestampSigner, self).unsign(value)
         value, timestamp = result.rsplit(self.sep, 1)
-        timestamp = baseconv.base62.decode(timestamp)
+        timestamp = b62_decode(timestamp)
         if max_age is not None:
             if isinstance(max_age, datetime.timedelta):
                 max_age = max_age.total_seconds()
